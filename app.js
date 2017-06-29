@@ -13,8 +13,8 @@ var TreeOfCompany = (function () {
 
 
 	client.login().then( () =>
-	db.collection('Companies').updateOne({owner_id: client.authedId()},{$set:{companys:[{company:"simple company",profit:10324},{company:"Megacompany",profit:103214,childs:[{company:"Middle",profit:1324,childs:[{company:"simple company",profit:104},{company:"Lower",profit:1324,childs:[{company:"yahoo",profit:1},{company:"apple",profit:100000},{company:"susmsung",profit:123125}]}]},{company:"nokia",profit:1231221}]},{company:"zoo",profit:1121},{company:"popcorn",profit:1112},{company:"useless",profit:0}]}})).then( () =>
-	db.collection('Companies').find()
+	db.collection('Companies').updateOne({owner_id: "5954dfc046224c73d1d3433d"},{$set:{companys:[{company:"simple company",profit:10324},{company:"Megacompany",profit:103214,childs:[{company:"Middle",profit:1324,childs:[{company:"simple company",profit:104},{company:"Lower",profit:1324,childs:[{company:"yahoo",profit:1},{company:"apple",profit:100000},{company:"susmsung",profit:123125}]}]},{company:"nokia",profit:1231221}]},{company:"zoo",profit:1121},{company:"popcorn",profit:1112},{company:"useless",profit:0}]}})).then( () =>
+	db.collection('Companies').find({owner_id: "5954dfc046224c73d1d3433d"})
 	).then(docs => {
 		mothertree.arr=docs[0].companys;
 		console.log("DB connected", docs[0].companys);
