@@ -5,30 +5,45 @@ var TreeOfCompany = (function () {
 	this.body = document.querySelector('body');
 	this.addingBlock = document.getElementById("inputs");
 	this.mainUL = document.getElementById("mainUL");
-	this.arr = [{company:"simple company",profit:10324},{company:"Megacompany",profit:103214,childs:[{company:"Middle",profit:1324,childs:[{company:"simple company",profit:104},{company:"Lower",profit:1324,childs:[{company:"yahoo",profit:1},{company:"apple",profit:100000},{company:"susmsung",profit:123125}]}]},{company:"nokia",profit:1231221}]},{company:"zoo",profit:1121},{company:"popcorn",profit:1112},{company:"useless",profit:0}];
+	this.arr = [];
 	this.title=document.querySelector('.title');
+
+	const client = new stitch.StitchClient('test-nzvqd');
+	const db = client.service('mongodb', 'mongodb-atlas').db('DataBase');
+
+
+	client.login().then( () =>
+	db.collection('Companies').find()
+	).then(docs => {
+		mothertree.arr=docs[0].companys;
+		console.log("DB connected", docs[0].companys);
+}).catch(err => {
+		console.error(err)
+}).then(() =>
+	this.intArr());
 
 	imgEvent(false,false,this.arr,this.title);
 
 	function reGetSelectors(){
-		mothertree.addingBlock.names=document.getElementById("name");
-		mothertree.addingBlock.profit=document.getElementById("profit");
-		mothertree.addingBlock.addButton=document.getElementById("button");
-		mothertree.addingBlock.addChild=document.querySelectorAll(".addChild");
-		mothertree.addingBlock.deleteNode=document.querySelector(".deleteNode");
+		mothertree.addingBlock.names = document.getElementById("name");
+		mothertree.addingBlock.profit = document.getElementById("profit");
+		mothertree.addingBlock.addButton = document.getElementById("button");
+		mothertree.addingBlock.addChild = document.querySelectorAll(".addChild");
+		mothertree.addingBlock.deleteNode = document.querySelector(".deleteNode");
 	}
 	reGetSelectors();
 
-	this.intArr=function() {
+	this.intArr = () => {
+
 		arr.forEach(function (item, i, arr) {
-			if (item.childs instanceof Array) {
+			if (item.childs instanceof Array && item.childs.length!==0) {
 				mothertree.mainUL.appendChild(makeanotherArr(item, i, arr));
 			}
 			else{
 				mothertree.mainUL.appendChild(makeElem(item, i, arr));
 			}
 		});
-	};
+	}
 
 	function hideInputs(){
 		mothertree.addingBlock.style.height="0px";
@@ -47,6 +62,7 @@ var TreeOfCompany = (function () {
 		var company = document.createElement('i');
 		company.className = "company";
 		company.innerHTML = item.company+" | "+item.profit+"$ | ";
+		company.style.fontWeight="100";
 		element.appendChild(span);
 		span.appendChild(link);
 		link.appendChild(company);
@@ -67,14 +83,14 @@ var TreeOfCompany = (function () {
 		mothertree.sumProfit+=item.profit;
 		profit(item,arr);
 		company.innerHTML = item.company+" | "+item.profit+"$ | "+mothertree.sumProfit+"$ | ";
-		company.style="font-weight:800";
+		company.style.fontWeight="800";
 		element.appendChild(span);
 		span.appendChild(link);
 		link.appendChild(company);
 		imgEvent(item, i, arr, link);
 		element.appendChild(newUL);
 		item.childs.forEach(function (item, i, arr) {
-			if (item.childs instanceof Array) {
+			if (item.childs instanceof Array && item.childs.length!==0) {
 				newUL.appendChild(makeanotherArr(item, i, arr))
 			}
 			else {
@@ -88,7 +104,7 @@ var TreeOfCompany = (function () {
 		mothertree.addingBlock.addButton.value="add";
 		mothertree.addingBlock.style.opacity="1";
 		mothertree.addingBlock.style.height="40px";
-		mothertree.addingBlock.addButton.addEventListener("click",function(){
+		mothertree.addingBlock.addButton.addEventListener("click",()=>{
 			try {
 				if (mothertree.addingBlock.names.value !== "" && mothertree.addingBlock.profit.value !== "") {
 					if (!arr[i].childs) {
@@ -97,11 +113,11 @@ var TreeOfCompany = (function () {
 					arr[i].childs.push({company: mothertree.addingBlock.names.value,profit: +mothertree.addingBlock.profit.value});
 				}
 			}
-			catch(e) {
+			catch(e){
 				arr.push({company: mothertree.addingBlock.names.value,profit: +mothertree.addingBlock.profit.value});
 			}
 			rebuild();
-		});
+		})
 	}
 
 	function EditNode(item, i, arr){
@@ -120,51 +136,59 @@ var TreeOfCompany = (function () {
 	}
 
 	function DeleteNode(item, i, arr){
-			arr.splice(i,1);
+			arr.splice(i, 1);
 			rebuild();
 	}
 
 	function rebuild(){
-		if(mothertree.addingBlock.style.display="block") {
+		if(mothertree.addingBlock.style.height!=="0px") {
 			var old_element = document.getElementById("button");
 			var new_element = old_element.cloneNode(true);
 			old_element.parentNode.replaceChild(new_element, old_element);
 			hideInputs();
 		}
-		while (mothertree.mainUL.firstChild) {
-			mothertree.mainUL.removeChild(mothertree.mainUL.firstChild);
-		}
-		mothertree.intArr();
+		client.login().then(() =>
+		db.collection('Companies').updateOne({owner_id: client.authedId()}, {$set:{companys:mothertree.arr}})).then(() =>
+		db.collection('Companies').find()
+	).then(docs => {
+			mothertree.arr=docs[0].companys;
+		console.log("DB changed", docs[0].companys);
+	}).catch(err => {
+			console.error(err)
+	}).then(()=>
+		mothertree.mainUL.innerHTML=""
+	).then(() =>
+		mothertree.intArr());
 		reGetSelectors();
 	}
 
 	function imgEvent(item, i, arr, link){
 		var addChild = document.createElement('img');
-		addChild.className="addChild";
-		addChild.src="img/add.png";
-		addChild.title="add";
+		addChild.className = "addChild";
+		addChild.src = "img/add.png";
+		addChild.title = "add";
 		link.appendChild(addChild);
-		addChild.addEventListener("click",function(){
+		addChild.addEventListener("click", function(){
 			AddChild(item, i, arr);
 		});
-		if (link.className==="title"){
-			addChild.style.margin="0px 0px -4px 3px";
+		if (link.className === "title"){
+			addChild.style.margin = "0px 0px -4px 3px";
 			return;
 		}
-		var deleteNode= document.createElement('img');
-		deleteNode.className="deleteNode";
-		deleteNode.src="img/close.png";
-		deleteNode.title="delete";
-		var editNode= document.createElement('img');
-		editNode.className="editNode";
-		editNode.src="img/edit.png";
-		editNode.title="edit";
+		var deleteNode = document.createElement('img');
+		deleteNode.className = "deleteNode";
+		deleteNode.src = "img/close.png";
+		deleteNode.title ="delete";
+		var editNode = document.createElement('img');
+		editNode.className = "editNode";
+		editNode.src = "img/edit.png";
+		editNode.title = "edit";
 		link.appendChild(editNode);
 		link.appendChild(deleteNode);
-		editNode.addEventListener("click",function(){
+		editNode.addEventListener("click", function(){
 			EditNode(item, i, arr);
 		});
-		deleteNode.addEventListener("click",function() {
+		deleteNode.addEventListener("click", function() {
 			DeleteNode(item, i, arr);
 		});
 	}
@@ -180,5 +204,4 @@ var TreeOfCompany = (function () {
 		}
 	}
 
-	this.intArr();
 })();
