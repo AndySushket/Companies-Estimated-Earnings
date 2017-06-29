@@ -13,7 +13,7 @@ var TreeOfCompany = (function () {
 
 
 	client.login().then( () =>
-	db.collection('Companies').find()
+	db.collection('Companies').find({"owner_id": "5954dfc046224c73d1d3433d"})
 	).then(docs => {
 		mothertree.arr=docs[0].companys;
 		console.log("DB connected", docs[0].companys);
