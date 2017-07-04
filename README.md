@@ -1,4 +1,4 @@
-# companies tree
+# Companies tree
 Web application that manages organizational structure for parent and child companies.
 Each company has two properties, they are company name and estimated annual earnings.
 If one of company have child company,than we can see 3rd property - tottal estimated annual earnings.
