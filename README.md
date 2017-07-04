@@ -1,7 +1,7 @@
 # Companies tree
 Web application that manages organizational structure for parent and child companies.
 Each company has two properties, they are company name and estimated annual earnings.
-If one of company have child company,than we can see 3rd property - tottal estimated annual earnings.
+If one of company have child company,than we can see 3rd property "total estimated annual earnings".
 The application allowing a user to view/add/edit/delete any company. 
 
 A barebones Node.js app using [Express 4](http://expressjs.com/).
