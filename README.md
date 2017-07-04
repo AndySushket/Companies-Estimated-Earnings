@@ -15,3 +15,7 @@ $ npm start
 
 Your app should now be running on [localhost:5000](http://localhost:5000/).
 
+To connect DB using a driver via the standard MongoDB URI:
+```sh
+  mongodb://admin:admin@ds143892.mlab.com:43892/companys
+```
