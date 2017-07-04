@@ -33,7 +33,7 @@ span {
 
 span p {
     position: relative;
-    top: .9em;
+    top: .75em;
     margin: 0 0 .2em .7em;
     background: #e8ebed;
 }
@@ -64,6 +64,7 @@ li {
 i{
     font: 13px 'Noto Sans', sans-serif;
     font-variant: small-caps;
+    margin-left: 2px;
 }
 em+i {
     position: relative;
