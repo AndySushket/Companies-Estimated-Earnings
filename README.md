@@ -46,3 +46,6 @@ Exemple of MongoDB doc:
     ]
 }
 ```
+`Instructions of deploying on heroku you can find here https://devcenter.heroku.com/articles/getting-started-with-nodejs#introduction;`
+
+
