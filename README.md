@@ -42,19 +42,6 @@ Exemple of MongoDB doc:
                     ]
                 }
             ]
-        },
-        {
-            "company": "Megacompany",
-            "profit": 103214,
-        },
-        {
-            "company": "zoo",
-            "profit": 1121
-        },
-        {
-            "company": "popcorn",
-            "profit": 11221,
-            "childs": []
         }
     ]
 }
