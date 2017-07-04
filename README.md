@@ -32,11 +32,11 @@ Exemple of MongoDB doc:
             "profit": 10321,
             "childs": [
                 {
-                    "company": "lol",
+                    "company": "simple company",
                     "profit": 12312,
                     "childs": [
                         {
-                            "company": "omg",
+                            "company": "simple company",
                             "profit": 123124
                         }
                     ]
